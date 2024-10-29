@@ -39,6 +39,17 @@
             text-align: center;
         }
 
+        /* Style de l'image d'invitation */
+        #invite-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: auto;
+            cursor: pointer;
+            z-index: 1;
+        }
+
         /* Style de la vidéo de fond pour prendre toute la page */
         #background-video {
             position: fixed;
@@ -69,6 +80,7 @@
 
         /* Style de la vidéo de la carte pour occuper tout l’écran */
         #card-video {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -112,6 +124,9 @@
 
     <!-- Contenu principal -->
     <div id="content">
+        <!-- Image d'invitation (première étape) -->
+        <img id="invite-image" src="invite.png" alt="Invitation" onclick="showVideo()">
+
         <!-- Bouton de lecture de musique -->
         <div id="music-button" onclick="playMusic()">
             <img src="play.png" alt="Play Music" style="width: 100px; height: 100px;">
@@ -128,25 +143,31 @@
 
         <!-- Boutons d'action (masqués au départ) -->
         <div id="action-buttons">
-            <a href="LoryaneNathanael.pdf" download>
-                <img src="download.png" alt="Télécharger l'invitation" class="action-button">
-            </a>
+            <a id="download-button" class="action-button" onclick="downloadInvitation()">Télécharger l'invitation</a>
             <a href="https://forms.gle/kTqQ8wL49FKhgVUg7" target="_blank">
                 <img src="answer.png" alt="Répondre au formulaire" class="action-button">
             </a>
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script>
         // Variables pour contrôler l'état de la vidéo et la musique
         let isMusicPlaying = false;
         let audio = new Audio('musique.mp3');
         let cardVideo = document.getElementById('card-video');
         let clickCount = 0;
-        let pauseTimes = [4, 6, 13, 15, 23]; // Nouveaux points de pause
+        let pauseTimes = [4, 6, 13, 15, 23];
 
         // Définir la vitesse de lecture de la vidéo
         cardVideo.playbackRate = 1.45;
+
+        // Fonction pour montrer la vidéo et cacher l'image d'invitation
+        function showVideo() {
+            document.getElementById('invite-image').style.display = 'none';
+            cardVideo.style.display = 'block';
+            cardVideo.play();
+        }
 
         // Fonction pour la musique
         function playMusic() {
@@ -178,13 +199,36 @@
                     }
                 };
             } else {
-                cardVideo.play(); // Laisse la vidéo se terminer sans autre pause
+                cardVideo.play();
                 cardVideo.onended = () => {
-                    cardVideo.style.display = 'none'; // Masque la vidéo après la fin
-                    document.getElementById('action-buttons').style.display = 'flex'; // Affiche les boutons en colonne
+                    cardVideo.style.display = 'none';
+                    document.getElementById('action-buttons').style.display = 'flex';
                 };
             }
         });
+
+        // Fonction de concaténation des PDF et téléchargement
+        async function downloadInvitation() {
+            const pdf1Bytes = await fetch("invite.pdf").then(res => res.arrayBuffer());
+            const pdf2Bytes = await fetch("LoryaneNathanael.pdf").then(res => res.arrayBuffer());
+
+            const pdfDoc = await PDFLib.PDFDocument.create();
+            const pdf1 = await PDFLib.PDFDocument.load(pdf1Bytes);
+            const pdf2 = await PDFLib.PDFDocument.load(pdf2Bytes);
+
+            const pages1 = await pdfDoc.copyPages(pdf1, pdf1.getPageIndices());
+            pages1.forEach(page => pdfDoc.addPage(page));
+
+            const pages2 = await pdfDoc.copyPages(pdf2, pdf2.getPageIndices());
+            pages2.forEach(page => pdfDoc.addPage(page));
+
+            const mergedPdfBytes = await pdfDoc.save();
+            const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "Invitation Mariage L&N.pdf";
+            link.click();
+        }
 
         // Compatibilité iOS pour la lecture automatique de la vidéo de fond
         document.addEventListener('DOMContentLoaded', () => {
