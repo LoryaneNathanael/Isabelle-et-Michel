@@ -144,7 +144,10 @@
 
         <!-- Boutons d'action (masqués au départ) -->
         <div id="action-buttons">
-            <a id="download-button" class="action-button" onclick="downloadInvitation()">Télécharger l'invitation</a>
+            <!-- Bouton de téléchargement avec image download.png -->
+            <a id="download-button" onclick="downloadInvitation()">
+                <img src="download.png" alt="Télécharger l'invitation" class="action-button">
+            </a>
             <a href="https://forms.gle/kTqQ8wL49FKhgVUg7" target="_blank">
                 <img src="answer.png" alt="Répondre au formulaire" class="action-button">
             </a>
@@ -158,16 +161,19 @@
         let audio = new Audio('musique.mp3');
         let cardVideo = document.getElementById('card-video');
         let clickCount = 0;
-        let pauseTimes = [4, 6, 13, 15, 23];
+        let pauseTimes = [4, 6, 13, 15, 23]; // Points de pause pour la vidéo
+        let initialClick = true; // Contrôle du premier clic entre image et vidéo
 
         // Définir la vitesse de lecture de la vidéo
         cardVideo.playbackRate = 1.45;
 
-        // Fonction pour montrer la vidéo et cacher l'image d'invitation
+        // Fonction pour montrer la vidéo et mettre en pause à 0s
         function showVideo() {
             document.getElementById('invite-image').style.display = 'none';
             cardVideo.style.display = 'block';
-            cardVideo.play();
+            cardVideo.pause(); // La vidéo est en pause à 0s
+            cardVideo.currentTime = 0;
+            initialClick = false; // Désactiver l'initialisation après le premier clic
         }
 
         // Fonction pour la musique
@@ -191,6 +197,8 @@
 
         // Contrôle de la vidéo au clic pour les points de pause
         cardVideo.addEventListener('click', () => {
+            if (initialClick) return; // Ne rien faire si on est au premier clic pour passer de l'image à la vidéo
+            
             if (clickCount < pauseTimes.length) {
                 cardVideo.play();
                 cardVideo.ontimeupdate = () => {
