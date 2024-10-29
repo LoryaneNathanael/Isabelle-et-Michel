@@ -44,11 +44,17 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            width: 350px;
+            width: 400px;
             height: auto;
             transform: translate(-50%, -50%);
             cursor: pointer;
             z-index: 1;
+            transition: opacity 0.8s ease; /* Transition de fondu */
+        }
+
+        /* Style pour l’effet de fondu */
+        .fade-out {
+            opacity: 0;
         }
 
         /* Style de la vidéo de fond pour prendre toute la page */
@@ -126,7 +132,7 @@
     <!-- Contenu principal -->
     <div id="content">
         <!-- Image d'invitation (première étape) -->
-        <img id="invite-image" src="invite.png" alt="Invitation" onclick="showVideo()">
+        <img id="invite-image" src="invite.png" alt="Invitation" onclick="startTransition()">
 
         <!-- Bouton de lecture de musique -->
         <div id="music-button" onclick="playMusic()">
@@ -160,6 +166,7 @@
         let isMusicPlaying = false;
         let audio = new Audio('musique.mp3');
         let cardVideo = document.getElementById('card-video');
+        let inviteImage = document.getElementById('invite-image');
         let clickCount = 0;
         let pauseTimes = [4, 6, 13, 15, 23]; // Points de pause pour la vidéo
         let initialClick = true; // Contrôle du premier clic entre image et vidéo
@@ -167,9 +174,15 @@
         // Définir la vitesse de lecture de la vidéo
         cardVideo.playbackRate = 1.45;
 
+        // Fonction pour démarrer la transition avec effet de fondu
+        function startTransition() {
+            inviteImage.classList.add('fade-out');
+            setTimeout(showVideo, 800); // Délai de 0.8s pour l'effet de fondu avant de montrer la vidéo
+        }
+
         // Fonction pour montrer la vidéo et mettre en pause à 0s
         function showVideo() {
-            document.getElementById('invite-image').style.display = 'none';
+            inviteImage.style.display = 'none'; // Masquer l'image après le fondu
             cardVideo.style.display = 'block';
             cardVideo.pause(); // La vidéo est en pause à 0s
             cardVideo.currentTime = 0;
