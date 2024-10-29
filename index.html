@@ -47,8 +47,8 @@
             transform: translateX(-50%);
             font-size: 24px;
             font-weight: bold;
-            color: #333;
-            animation: blink 1s infinite;
+            color: #a1814b; /* Nouvelle couleur */
+            animation: blink 2s infinite; /* Réduction de la fréquence de clignotement */
             z-index: 3;
             display: none;
         }
@@ -192,7 +192,7 @@
         let inviteImage = document.getElementById('invite-image');
         let clickText = document.getElementById('click-text');
         let clickCount = 0;
-        let pauseTimes = [4, 6, 13, 15, 23]; // Points de pause pour la vidéo
+        let pauseTimes = [4.3, 6, 13, 15, 23]; // Points de pause pour la vidéo
         let initialClick = true; // Contrôle du premier clic entre image et vidéo
 
         // Définir la vitesse de lecture de la vidéo
