@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitation Mariage</title>
+    <style>
+        /* Style de l'écran de chargement */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #f6d3c9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #loading-circle {
+            width: 50px;
+            height: 50px;
+            border: 7px solid #fff4f1;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Style de base pour le contenu principal */
+        #content {
+            display: none;
+            text-align: center;
+        }
+
+        /* Style de la vidéo de fond pour prendre toute la page */
+        #background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        /* Style du bouton de musique */
+        #music-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+
+        #music-button:active {
+            opacity: 1;
+        }
+
+        /* Style de la vidéo de la carte pour occuper tout l’écran */
+        #card-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: contain;
+            z-index: 1;
+        }
+
+        /* Conteneur de boutons d'action */
+        #action-buttons {
+            display: none; /* Masqué jusqu'à la fin de la vidéo */
+            flex-direction: column;
+            align-items: center;
+            margin-top: 100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Style des boutons d'action */
+        .action-button {
+            width: 150px;
+            height: auto;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+            margin: 15px 0;
+        }
+
+        /* Effet de survol pour les boutons d'action */
+        .action-button:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Écran de chargement -->
+    <div id="loading-screen">
+        <div id="loading-circle"></div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div id="content">
+        <!-- Bouton de lecture de musique -->
+        <div id="music-button" onclick="playMusic()">
+            <img src="play.png" alt="Play Music" style="width: 100px; height: 100px;">
+        </div>
+
+        <!-- Vidéo de fond -->
+        <video id="background-video" autoplay muted loop playsinline>
+            <source src="background.mp4" type="video/mp4">
+            Votre navigateur ne supporte pas la lecture de vidéos.
+        </video>
+
+        <!-- Vidéo de la carte avec transparence (au format WebM) -->
+        <video id="card-video" src="card_animation.webm" type="video/webm" playsinline></video>
+
+        <!-- Boutons d'action (masqués au départ) -->
+        <div id="action-buttons">
+            <a href="LoryaneNathanael.pdf" download>
+                <img src="download.png" alt="Télécharger l'invitation" class="action-button">
+            </a>
+            <a href="https://forms.gle/kTqQ8wL49FKhgVUg7" target="_blank">
+                <img src="answer.png" alt="Répondre au formulaire" class="action-button">
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Variables pour contrôler l'état de la vidéo et la musique
+        let isMusicPlaying = false;
+        let audio = new Audio('musique.mp3');
+        let cardVideo = document.getElementById('card-video');
+        let clickCount = 0;
+        let pauseTimes = [4, 6, 13, 15, 23]; // Nouveaux points de pause
+
+        // Définir la vitesse de lecture de la vidéo
+        cardVideo.playbackRate = 1.45;
+
+        // Fonction pour la musique
+        function playMusic() {
+            if (!isMusicPlaying) {
+                audio.loop = true;
+                audio.play().catch(error => console.error("Erreur de lecture de la musique:", error));
+                isMusicPlaying = true;
+            } else {
+                audio.pause();
+                isMusicPlaying = false;
+            }
+        }
+
+        // Fonction pour le chargement de la page
+        window.addEventListener('load', () => {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+            cardVideo.currentTime = 0;
+        });
+
+        // Contrôle de la vidéo au clic pour les points de pause
+        cardVideo.addEventListener('click', () => {
+            if (clickCount < pauseTimes.length) {
+                cardVideo.play();
+                cardVideo.ontimeupdate = () => {
+                    if (cardVideo.currentTime >= pauseTimes[clickCount]) {
+                        cardVideo.pause();
+                        clickCount++;
+                    }
+                };
+            } else {
+                cardVideo.play(); // Laisse la vidéo se terminer sans autre pause
+                cardVideo.onended = () => {
+                    cardVideo.style.display = 'none'; // Masque la vidéo après la fin
+                    document.getElementById('action-buttons').style.display = 'flex'; // Affiche les boutons en colonne
+                };
+            }
+        });
+
+        // Compatibilité iOS pour la lecture automatique de la vidéo de fond
+        document.addEventListener('DOMContentLoaded', () => {
+            const backgroundVideo = document.getElementById('background-video');
+            if (backgroundVideo) {
+                backgroundVideo.play().catch(() => {
+                    backgroundVideo.muted = true;
+                    backgroundVideo.play();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
