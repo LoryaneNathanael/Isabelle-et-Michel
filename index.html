@@ -46,12 +46,12 @@
             right: 20px;
             transform: translateY(-50%);
             font-size: 36px;
-            color: #a1814b; /* Couleur de la flèche */
-            animation: blink 2s infinite; /* Animation de clignotement lent */
+            color: #a1814b;
+            animation: blink 2s infinite;
             z-index: 3;
             display: none;
             font-family: Arial, sans-serif;
-            pointer-events: none; /* Permet de passer les clics à travers la flèche */
+            pointer-events: none;
         }
 
         @keyframes blink {
@@ -69,7 +69,7 @@
             transform: translate(-50%, -50%);
             cursor: pointer;
             z-index: 1;
-            transition: opacity 0.8s ease; /* Transition de fondu */
+            transition: opacity 0.8s ease;
         }
 
         /* Style pour l’effet de fondu */
@@ -112,18 +112,18 @@
             top: 50%;
             left: 50%;
             width: 100vw;
-            height: auto; /* Conserver les proportions */
+            height: auto;
             transform: translate(-50%, -50%);
             z-index: 1;
         }
 
         /* Conteneur de boutons d'action */
         #action-buttons {
-            display: none; /* Masqué jusqu'à la fin de la vidéo */
+            display: none;
             flex-direction: column;
             align-items: center;
             position: relative;
-            margin-top: 200px; /* Ajustement vertical pour centrer les boutons */
+            margin-top: 200px;
             z-index: 1;
         }
 
@@ -173,7 +173,6 @@
 
         <!-- Boutons d'action (masqués au départ) -->
         <div id="action-buttons">
-            <!-- Bouton de téléchargement avec image download.png -->
             <a id="download-button" onclick="downloadInvitation()">
                 <img src="download.png" alt="Télécharger l'invitation" class="action-button">
             </a>
@@ -185,26 +184,23 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script>
-        // Fonction pour détecter si l'appareil est sous iOS
         function isIOS() {
             return /iPhone|iPad|iPod/i.test(navigator.userAgent);
         }
 
-        // Variables pour contrôler l'état de la vidéo et la musique
         let isMusicPlaying = false;
         let audio = new Audio('musique.mp3');
         let cardVideo = document.getElementById('card-video');
         let inviteImage = document.getElementById('invite-image');
         let arrowRight = document.getElementById('arrow-right');
         let clickCount = 0;
-        let pauseTimes = [4, 6, 13, 15, 23]; // Points de pause pour la vidéo
+        let pauseTimes = [4, 6, 13, 15, 23];
         let initialClick = true;
 
-        // Définir la vidéo de la carte en fonction de l'appareil
         window.addEventListener('load', () => {
             if (isIOS()) {
-                cardVideo.src = "card_animationios.webm";
-                cardVideo.type = "video/webm";
+                cardVideo.src = "card_animationios.hevc";
+                cardVideo.type = "video/mp4; codecs=hevc";
             } else {
                 cardVideo.src = "card_animation.webm";
                 cardVideo.type = "video/webm";
@@ -272,7 +268,6 @@
             }
         });
 
-        // Fonction de concaténation et téléchargement des PDF
         async function downloadInvitation() {
             const pdf1Bytes = await fetch("invite.pdf").then(res => res.arrayBuffer());
             const pdf2Bytes = await fetch("LoryaneNathanael.pdf").then(res => res.arrayBuffer());
