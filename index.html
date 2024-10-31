@@ -20,10 +20,10 @@
         }
 
         #loading-circle {
-            width: 50px;
-            height: 50px;
-            border: 7px solid #fff4f1;
-            border-top-color: transparent;
+            width: 100px;
+            height: 100px;
+            background-image: url('logo_png'); /* Remplacer par le nom de fichier exact du logo */
+            background-size: cover;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -57,24 +57,6 @@
         @keyframes blink {
             0%, 50%, 100% { opacity: 1; }
             25%, 75% { opacity: 0; }
-        }
-
-        /* Style de l'image d'invitation */
-        #invite-image {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 400px;
-            height: auto;
-            transform: translate(-50%, -50%);
-            cursor: pointer;
-            z-index: 1;
-            transition: opacity 0.8s ease;
-        }
-
-        /* Style pour l’effet de fondu */
-        .fade-out {
-            opacity: 0;
         }
 
         /* Style de la vidéo de fond pour prendre toute la page */
@@ -113,6 +95,7 @@
             left: 50%;
             width: 100vw;
             height: auto;
+            object-fit: contain;
             transform: translate(-50%, -50%);
             z-index: 1;
         }
@@ -137,7 +120,6 @@
             margin: 15px 0;
         }
 
-        /* Effet de survol pour les boutons d'action */
         .action-button:hover {
             opacity: 1;
         }
@@ -154,9 +136,6 @@
 
     <!-- Contenu principal -->
     <div id="content">
-        <!-- Image d'invitation (première étape) -->
-        <img id="invite-image" src="invite.png" alt="Invitation" onclick="startTransition()">
-
         <!-- Bouton de lecture de musique -->
         <div id="music-button" onclick="playMusic()">
             <img src="play.png" alt="Play Music" style="width: 100px; height: 100px;">
@@ -193,7 +172,6 @@
         let isMusicPlaying = false;
         let audio = new Audio('musique.mp3');
         let cardVideo = document.getElementById('card-video');
-        let inviteImage = document.getElementById('invite-image');
         let arrowRight = document.getElementById('arrow-right');
         let clickCount = 0;
         let pauseTimes = [4, 6, 13, 15, 23];
@@ -201,13 +179,8 @@
 
         // Définir la vidéo de la carte en fonction de l'appareil
         window.addEventListener('load', () => {
-            if (isIOS()) {
-                cardVideo.src = "card_animationios.mov";
-                cardVideo.type = "video/quicktime";
-            } else {
-                cardVideo.src = "card_animation.webm";
-                cardVideo.type = "video/webm";
-            }
+            cardVideo.src = isIOS() ? "card_animationios.mp4" : "card_animationios.mp4";
+            cardVideo.type = "video/mp4";
             
             document.getElementById('loading-screen').style.display = 'none';
             document.getElementById('content').style.display = 'block';
