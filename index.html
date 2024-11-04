@@ -91,6 +91,9 @@
             height: 100vh;
             object-fit: cover;
             z-index: -2;
+            muted: true;
+            playsinline: true;
+            autoplay: true;
         }
 
         /* Style du bouton de musique */
@@ -301,9 +304,16 @@
         document.addEventListener('DOMContentLoaded', () => {
             const backgroundVideo = document.getElementById('background-video');
             if (backgroundVideo) {
+                backgroundVideo.muted = true; // Assurez-vous que la vidéo est en sourdine
+                backgroundVideo.playsInline = true; // Assurez-vous que l'attribut playsinline est défini
+                backgroundVideo.autoplay = true; // Pour qu'elle soit automatiquement lancée
+
+                // Essayez de lancer la vidéo
                 backgroundVideo.play().catch(() => {
-                    backgroundVideo.muted = true;
-                    backgroundVideo.play();
+                    // Ajouter un écouteur d'événement pour que la vidéo démarre lorsque l'utilisateur interagit avec l'écran
+                    document.body.addEventListener('click', () => {
+                        backgroundVideo.play();
+                    }, { once: true }); // Le gestionnaire est supprimé après une seule interaction
                 });
             }
         });
