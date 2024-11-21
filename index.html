@@ -204,7 +204,7 @@
         let inviteImage = document.getElementById('invite-image');
         let arrowRight = document.getElementById('arrow-right');
         let clickCount = 0;
-        let pauseTimes = [3.267,6.969,7.707,11.230];
+        let pauseTimes = [3.012,6.818,7.638,11.106];
         let initialClick = true;
 
         // Définir la vidéo de la carte en fonction de l'appareil
@@ -212,7 +212,7 @@
             if (isIOS()) {
                 cardVideo.src = "card_animationios.mp4";
                 cardVideo.type = "video/mp4";
-                pauseTimes = [2.897,6.705,7.536,10.846]; // Timeline spécifique pour iPhone
+                pauseTimes = [2.897,6.705,7.449,10.772]; // Timeline spécifique pour iPhone
             } else {
                 cardVideo.src = "card_animation.webm";
                 cardVideo.type = "video/webm";
